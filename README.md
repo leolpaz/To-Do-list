@@ -1,6 +1,6 @@
 ![](https://img.shields.io/badge/Microverse-blueviolet)
 
-# Project Name
+# To-Do-List
 
 > On this project we recreate using Webpack a to-do list with multiple functionalities as add and remove, refresh, clear completed and rearranging.
 

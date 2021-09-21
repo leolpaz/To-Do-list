@@ -7,7 +7,7 @@
 
 .list-container {
   list-style-type: none;
-  border: 1px solid #CCC;
+  border: 1px solid #ccc;
   box-shadow: 0 2px 10px rgb(160, 158, 158);
   padding: 0;
   width: 450px;
@@ -15,7 +15,6 @@
 
 .list-item {
   display: flex;
-  margin-bottom: 2%;
   justify-content: space-between;
   margin: 4%;
   align-items: center;
@@ -58,7 +57,7 @@
   width: 100%;
   margin: 0;
   border: none;
-  border-top: 1px solid #CCC;
+  border-top: 1px solid #ccc;
   padding: 3%;
   font-size: 18px;
   color: rgb(150, 150, 150);
@@ -67,7 +66,6 @@
 .list-box {
   height: 18px;
   width: 18px;
-  align-self: middle;
 }
 
 .list-label {
@@ -82,4 +80,3 @@
   align-self: end;
   justify-content: space-between;
 }
-

@@ -12,9 +12,9 @@ const taskArray = [{
   index: 2,
 },
 {
-  description: 'Wash the dishes',
+  description: 'Do the laundry',
   completed: false,
-  index: 1,
+  index: 3,
 },
 {
   description: 'Wash the dishes',

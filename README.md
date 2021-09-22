@@ -6,7 +6,7 @@
 
 ![screenshot](./app_screenshot.png)
 
-On this milestone only the basic populating script and the style is added.
+On this milestone we add local storage for the array as well as the function of completing items in the list.
 
 ## Built With
 

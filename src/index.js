@@ -101,12 +101,10 @@ function buttonListener() {
     box.addEventListener('change', (event) => {
       if (event.target.checked) {
         checked(event.target.id, taskArray)
-        console.log(taskArray)
         localStorage.setItem('taskArray', JSON.stringify(taskArray));
         paintList();
       } else {
         unchecked(event.target.id, taskArray)
-        console.log(taskArray)
         localStorage.setItem('taskArray', JSON.stringify(taskArray));
         paintList()
       }

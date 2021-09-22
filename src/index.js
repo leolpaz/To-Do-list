@@ -1,27 +1,33 @@
 import './style.css';
 import Icon from './loading.png';
 import Icon2 from './verticaldots.png';
+import {
+  checked,
+  unchecked,
+} from './complete';
 
 const mainList = document.getElementById('main-list');
 const loadingIcon = new Image();
 loadingIcon.src = Icon;
+let taskArray = [];
 
-const taskArray = [{
-  description: 'Complete day 1 milestone',
-  completed: false,
-  index: 2,
-},
-{
-  description: 'Do the laundry',
-  completed: false,
-  index: 3,
-},
-{
-  description: 'Wash the dishes',
-  completed: false,
-  index: 1,
-},
-];
+if (JSON.parse(localStorage.getItem('taskArray') === null)) {
+  taskArray.push({
+    description: 'Complete day 1 milestone',
+    completed: false,
+    index: 2,
+  }, {
+    description: 'Do the laundry',
+    completed: false,
+    index: 3,
+  }, {
+    description: 'Wash the dishes',
+    completed: false,
+    index: 1,
+  });
+} else {
+  taskArray = (JSON.parse(localStorage.getItem('taskArray')));
+}
 
 function sort() {
   taskArray.sort((a, b) => a.index - b.index);
@@ -29,6 +35,7 @@ function sort() {
 
 function paintList() {
   sort();
+  mainList.innerHTML = '';
   const titleContainer = document.createElement('div');
   const paragraph = document.createElement('p');
   titleContainer.classList.add('title-container');
@@ -50,13 +57,18 @@ function paintList() {
     label.setAttribute('for', `element${index}`);
     label.classList.add('list-label');
     const inputCheckbox = document.createElement('input');
-    inputCheckbox.setAttribute('id', `element${index}`);
+    inputCheckbox.setAttribute('id', `${index}`);
     inputCheckbox.setAttribute('value', `${element.completed}`);
     inputCheckbox.setAttribute('type', 'checkbox');
     inputCheckbox.classList.add('list-box');
     const inputText = document.createElement('div');
     inputText.classList.add('description');
     inputText.innerHTML = `<p>${element.description}</p>`;
+    if (element.completed === true) {
+      inputCheckbox.setAttribute('checked', 'checked');
+      inputText.style.textDecoration = 'line-through';
+      inputText.style.color = '#ccc';
+    }
     label.appendChild(inputCheckbox);
     label.appendChild(inputText);
     listItem.appendChild(label);
@@ -70,4 +82,25 @@ function paintList() {
   mainList.appendChild(button);
 }
 
-paintList();
+function buttonListener() {
+  const checkboxes = document.querySelectorAll('input[class=list-box]');
+  Array.from(checkboxes).forEach(box => {
+    box.addEventListener('change', (event) => {
+      if (event.target.checked) {
+        checked(event.target.id, taskArray);
+        localStorage.setItem('taskArray', JSON.stringify(taskArray));
+        paintList();
+      } else {
+        unchecked(event.target.id, taskArray);
+        localStorage.setItem('taskArray', JSON.stringify(taskArray));
+        paintList();
+      }
+    });
+  });
+}
+
+document.addEventListener('DOMContentLoaded', paintList());
+document.addEventListener('DOMContentLoaded', buttonListener());
+mainList.addEventListener('change', () => {
+  buttonListener();
+});

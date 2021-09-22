@@ -26,7 +26,11 @@
   border: none;
   font-style: italic;
   font-size: 18px;
-  width: 92%;
+  width: 90%;
+  background: url(./enter.png) no-repeat scroll;
+  background-position: right;
+  background-size: 16px;
+  filter: invert(60%);
 }
 
 .title-container {

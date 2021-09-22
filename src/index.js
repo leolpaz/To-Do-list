@@ -2,42 +2,32 @@ import './style.css';
 import Icon from './loading.png';
 import Icon2 from './verticaldots.png';
 import {
-  checked
-} from './complete';
-import {
-  unchecked
+  checked,
+  unchecked,
 } from './complete';
 
-const container = document.querySelector(".list-container");
 const mainList = document.getElementById('main-list');
 const loadingIcon = new Image();
 loadingIcon.src = Icon;
-let taskArray = []
-
+let taskArray = [];
 
 if (JSON.parse(localStorage.getItem('taskArray') === null)) {
   taskArray.push({
-      description: 'Complete day 1 milestone',
-      completed: false,
-      index: 2,
-    },
-    {
-      description: 'Do the laundry',
-      completed: false,
-      index: 3,
-    },
-    {
-      description: 'Wash the dishes',
-      completed: false,
-      index: 1,
-    }
-) 
-console.log(taskArray)
+    description: 'Complete day 1 milestone',
+    completed: false,
+    index: 2,
+  }, {
+    description: 'Do the laundry',
+    completed: false,
+    index: 3,
+  }, {
+    description: 'Wash the dishes',
+    completed: false,
+    index: 1,
+  });
 } else {
   taskArray = (JSON.parse(localStorage.getItem('taskArray')));
 }
-
-console.log(taskArray)
 
 function sort() {
   taskArray.sort((a, b) => a.index - b.index);
@@ -45,7 +35,7 @@ function sort() {
 
 function paintList() {
   sort();
-  mainList.innerHTML = ""
+  mainList.innerHTML = '';
   const titleContainer = document.createElement('div');
   const paragraph = document.createElement('p');
   titleContainer.classList.add('title-container');
@@ -74,10 +64,10 @@ function paintList() {
     const inputText = document.createElement('div');
     inputText.classList.add('description');
     inputText.innerHTML = `<p>${element.description}</p>`;
-    if (element.completed == true) {
-      inputCheckbox.setAttribute('checked', `checked`);
+    if (element.completed === true) {
+      inputCheckbox.setAttribute('checked', 'checked');
       inputText.style.textDecoration = 'line-through';
-      inputText.style.color = '#ccc'
+      inputText.style.color = '#ccc';
     }
     label.appendChild(inputCheckbox);
     label.appendChild(inputText);
@@ -90,24 +80,27 @@ function paintList() {
   button.classList.add('list-button');
   button.innerHTML = 'Clear all completed';
   mainList.appendChild(button);
-  buttonListener()
 }
 
-document.addEventListener('DOMContentLoaded', paintList());
-
 function buttonListener() {
-  const checkboxes = document.querySelectorAll("input[class=list-box]");
+  const checkboxes = document.querySelectorAll('input[class=list-box]');
   Array.from(checkboxes).forEach(box => {
     box.addEventListener('change', (event) => {
       if (event.target.checked) {
-        checked(event.target.id, taskArray)
+        checked(event.target.id, taskArray);
         localStorage.setItem('taskArray', JSON.stringify(taskArray));
         paintList();
       } else {
-        unchecked(event.target.id, taskArray)
+        unchecked(event.target.id, taskArray);
         localStorage.setItem('taskArray', JSON.stringify(taskArray));
-        paintList()
+        paintList();
       }
-    })
-  })
+    });
+  });
 }
+
+document.addEventListener('DOMContentLoaded', paintList());
+document.addEventListener('DOMContentLoaded', buttonListener());
+mainList.addEventListener('change', () => {
+  buttonListener();
+});

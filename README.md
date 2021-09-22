@@ -19,6 +19,12 @@ On this milestone only the basic populating script and the style is added.
 
 [Live Demo Link](https://rawcdn.githack.com/leolpaz/To-Do-list/ae9a6fe568fa2cfca7258bca64e93f72af901f21/dist/index.html)
 
+## Get Started
+
+- Clone the repository with git clone https://github.com/leolpaz/To-Do-list.git;
+- Install dependencies with npm i;
+- Change the mode on webpack.config.js from 'production' to 'development'
+- Use npm start to start the website;
 
 ## Authors
 

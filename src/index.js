@@ -1,6 +1,8 @@
 import './style.css';
 import Icon from './loading.png';
 import Icon2 from './verticaldots.png';
+import { checked } from './complete';
+import { unchecked } from './complete';
 
 const mainList = document.getElementById('main-list');
 const loadingIcon = new Image();
@@ -50,7 +52,7 @@ function paintList() {
     label.setAttribute('for', `element${index}`);
     label.classList.add('list-label');
     const inputCheckbox = document.createElement('input');
-    inputCheckbox.setAttribute('id', `element${index}`);
+    inputCheckbox.setAttribute('id', `${index}`);
     inputCheckbox.setAttribute('value', `${element.completed}`);
     inputCheckbox.setAttribute('type', 'checkbox');
     inputCheckbox.classList.add('list-box');
@@ -70,4 +72,19 @@ function paintList() {
   mainList.appendChild(button);
 }
 
-paintList();
+document.addEventListener('DOMContentLoaded', paintList());
+
+var checkboxes = document.querySelectorAll("input[class=list-box]");
+console.log(checkboxes)
+
+Array.from(checkboxes).forEach(box => {
+  box.addEventListener('change', (event) => {
+    if(event.target.checked) {
+      checked(event.target.id, taskArray)
+      console.log(taskArray)
+    } else {
+      unchecked(event.target.id, taskArray)
+      console.log(taskArray)
+    }
+  })
+})

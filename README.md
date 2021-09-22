@@ -17,7 +17,7 @@ On this milestone we add local storage for the array as well as the function of 
 
 ## Live Demo
 
-[Live Demo Link](https://rawcdn.githack.com/leolpaz/To-Do-list/ae9a6fe568fa2cfca7258bca64e93f72af901f21/dist/index.html)
+[Live Demo Link](https://rawcdn.githack.com/leolpaz/To-Do-list/b89846e8bf1493d7b1f1d0eb35dc6a4e148c5202/dist/index.htmll)
 
 ## Get Started
 

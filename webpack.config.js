@@ -29,7 +29,4 @@ module.exports = {
       type: 'asset/resource',
     }],
   },
-  performance: {
-    hints: false
-  }
 };

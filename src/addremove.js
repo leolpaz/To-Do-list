@@ -8,6 +8,18 @@ function addTask(arr, value) {
   paintList()
 }
 
+function removeItem(event, arr) {
+  const itemIndex = event.target.getAttribute('value');
+  arr.splice(itemIndex, 1);
+  arr.forEach(item => {
+    if (item.index > itemIndex) {
+      item.index = item.index-1;
+    }
+  })
+  localStorage.setItem('taskArray', JSON.stringify(arr));
+  paintList();
+}
+
 function edit(event, arr) {
   const checkIfOpened = event.target.parentNode.getAttribute('value');
   if (checkIfOpened !== null) {
@@ -17,11 +29,16 @@ function edit(event, arr) {
   const initialState = event.target.innerHTML;
   event.target.innerHTML = `<input class="description" id="input${value}" value="${arr[value].description}"></input>`
   const inputField = document.getElementById(`input${value}`);
-  const imageChange = document.querySelector('img')
-  console.log(event)
+  const imageChange = document.querySelector(`img[value="${value}"]`)
+  const initialImage = imageChange.src
+  imageChange.addEventListener('click', event => {
+    removeItem(event, arr);
+  })
+  imageChange.src = TrashIcon;
   inputField.focus()
   inputField.addEventListener('focusout', (e) => {
     e.target.outerHTML = initialState;
+    imageChange.src = initialImage;
   })
   inputField.addEventListener('keydown', (e) => {
     if (e.key === "Enter") {
@@ -53,4 +70,6 @@ export function itemListener(arr) {
     };
   })
 }
+
+
 

@@ -12,28 +12,25 @@ import {
 const mainList = document.getElementById('main-list');
 const loadingIcon = new Image();
 loadingIcon.src = Icon;
-let taskArray = [];
-
-if (JSON.parse(localStorage.getItem('taskArray') === null)) {
-  taskArray.push({
-    description: 'Complete day 1 milestone',
-    completed: false,
-    index: 2,
-  }, {
-    description: 'Do the laundry',
-    completed: false,
-    index: 3,
-  }, {
-    description: 'Wash the dishes',
-    completed: false,
-    index: 1,
-  });
-} else {
-  taskArray = (JSON.parse(localStorage.getItem('taskArray')));
-}
+let taskArray = JSON.parse(localStorage.getItem('taskArray') || '[]');
 
 function sort() {
   taskArray.sort((a, b) => a.index - b.index);
+}
+
+function buttonListener() {
+  const checkboxes = document.querySelectorAll('.list-box');
+  Array.from(checkboxes).forEach(box => {
+    box.addEventListener('change', (event) => {
+      if (event.target.checked) {
+        localStorage.setItem('taskArray', JSON.stringify(taskArray));
+        checked(event.target.id, taskArray);
+      } else {
+        localStorage.setItem('taskArray', JSON.stringify(taskArray));
+        unchecked(event.target.id, taskArray);
+      }
+    });
+  });
 }
 
 export function paintList() {
@@ -86,27 +83,8 @@ export function paintList() {
   button.innerHTML = 'Clear all completed';
   mainList.appendChild(button);
   itemListener(taskArray)
-}
-
-function buttonListener() {
-  const checkboxes = document.querySelectorAll('.list-box');
-  Array.from(checkboxes).forEach(box => {
-    box.addEventListener('change', (event) => {
-      if (event.target.checked) {
-        checked(event.target.id, taskArray);
-        localStorage.setItem('taskArray', JSON.stringify(taskArray));
-        paintList();
-      } else {
-        unchecked(event.target.id, taskArray);
-        localStorage.setItem('taskArray', JSON.stringify(taskArray));
-        paintList();
-      }
-    });
-  });
+  buttonListener();
 }
 
 document.addEventListener('DOMContentLoaded', paintList());
 document.addEventListener('DOMContentLoaded', buttonListener());
-mainList.addEventListener('change', () => {
-  buttonListener();
-});

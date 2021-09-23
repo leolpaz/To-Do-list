@@ -5,6 +5,9 @@ import {
   checked,
   unchecked,
 } from './complete';
+import {
+  itemListener,
+} from './addremove'
 
 const mainList = document.getElementById('main-list');
 const loadingIcon = new Image();
@@ -33,7 +36,7 @@ function sort() {
   taskArray.sort((a, b) => a.index - b.index);
 }
 
-function paintList() {
+export function paintList() {
   sort();
   mainList.innerHTML = '';
   const titleContainer = document.createElement('div');
@@ -50,6 +53,7 @@ function paintList() {
   mainList.appendChild(addInput);
   taskArray.forEach((element, index) => {
     const verticalDotsIcon = new Image();
+    verticalDotsIcon.setAttribute('value', index)
     verticalDotsIcon.src = Icon2;
     const listItem = document.createElement('li');
     listItem.classList.add('list-item');
@@ -63,7 +67,8 @@ function paintList() {
     inputCheckbox.classList.add('list-box');
     const inputText = document.createElement('div');
     inputText.classList.add('description');
-    inputText.innerHTML = `<p>${element.description}</p>`;
+    inputText.setAttribute('value', `${index}`)
+    inputText.innerHTML = `${element.description}`;
     if (element.completed === true) {
       inputCheckbox.setAttribute('checked', 'checked');
       inputText.style.textDecoration = 'line-through';
@@ -80,10 +85,11 @@ function paintList() {
   button.classList.add('list-button');
   button.innerHTML = 'Clear all completed';
   mainList.appendChild(button);
+  itemListener(taskArray)
 }
 
 function buttonListener() {
-  const checkboxes = document.querySelectorAll('input[class=list-box]');
+  const checkboxes = document.querySelectorAll('.list-box');
   Array.from(checkboxes).forEach(box => {
     box.addEventListener('change', (event) => {
       if (event.target.checked) {

@@ -28,9 +28,23 @@
   font-size: 18px;
   width: 90%;
   background: url(./enter.png) no-repeat scroll;
-  background-position: right;
+  background-position: 99% 50%;
   background-size: 16px;
   filter: invert(60%);
+  padding-left: 2%;
+}
+
+.list-input-clicked {
+  margin: 4%;
+  height: 20px;
+  border: none;
+  font-style: italic;
+  font-size: 18px;
+  width: 90%;
+  background: url(./enter.png) no-repeat scroll;
+  background-position: 99% 50%;
+  background-size: 16px;
+  padding-left: 2%;
 }
 
 .title-container {
@@ -75,10 +89,11 @@
 .list-label {
   display: flex;
   align-items: center;
+  width: 100%;
 }
 
 .description {
-  width: 100%;
+  width: 90%;
   font-size: 16px;
   display: inline-flex;
   align-self: end;

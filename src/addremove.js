@@ -17,7 +17,6 @@ function removeItem(event, arr) {
     }
   })
   localStorage.setItem('taskArray', JSON.stringify(arr));
-  paintList();
 }
 
 function edit(event, arr) {
@@ -69,6 +68,17 @@ export function itemListener(arr) {
       addField.setAttribute('class', 'test');
     };
   })
+}
+
+export function removeAll(arr) {
+    arr = arr.filter(element => {
+      return element.completed === false
+    });
+    arr.forEach((element, i) => {
+      element.index = i+1;
+    })
+    localStorage.setItem('taskArray', JSON.stringify(arr));
+    return arr;
 }
 
 

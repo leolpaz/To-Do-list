@@ -7,6 +7,7 @@ import {
 } from './complete';
 import {
   itemListener,
+  removeAll,
 } from './addremove'
 
 const mainList = document.getElementById('main-list');
@@ -14,9 +15,6 @@ const loadingIcon = new Image();
 loadingIcon.src = Icon;
 let taskArray = JSON.parse(localStorage.getItem('taskArray') || '[]');
 
-function sort() {
-  taskArray.sort((a, b) => a.index - b.index);
-}
 
 function buttonListener() {
   const checkboxes = document.querySelectorAll('.list-box');
@@ -33,8 +31,15 @@ function buttonListener() {
   });
 }
 
+function removeAllListener() {
+  const removeAllBtn = document.querySelector('.list-button');
+  removeAllBtn.addEventListener('click', () => {
+    taskArray = removeAll(taskArray)
+    paintList()
+  })
+}
+
 export function paintList() {
-  sort();
   mainList.innerHTML = '';
   const titleContainer = document.createElement('div');
   const paragraph = document.createElement('p');
@@ -84,7 +89,9 @@ export function paintList() {
   mainList.appendChild(button);
   itemListener(taskArray)
   buttonListener();
+  removeAllListener();
 }
 
+
+
 document.addEventListener('DOMContentLoaded', paintList());
-document.addEventListener('DOMContentLoaded', buttonListener());

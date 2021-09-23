@@ -17,6 +17,7 @@ function edit(event, arr) {
   const initialState = event.target.innerHTML;
   event.target.innerHTML = `<input class="description" id="input${value}" value="${arr[value].description}"></input>`
   const inputField = document.getElementById(`input${value}`);
+  const imageChange = document.querySelector('img')
   console.log(event)
   inputField.focus()
   inputField.addEventListener('focusout', (e) => {

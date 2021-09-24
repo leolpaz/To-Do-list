@@ -6,7 +6,7 @@
 
 ![screenshot](./app_screenshot.png)
 
-On this milestone we add local storage for the array as well as the function of completing items in the list.
+On this milestone I added the option to add, remove, and update entries.
 
 ## Built With
 

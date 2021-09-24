@@ -1,11 +1,9 @@
-import { paintList } from ".";
-
 export function checked(id, arr) {
   arr[id].completed = true;
-  paintList()
+  localStorage.setItem('taskArray', JSON.stringify(arr));
 }
 
 export function unchecked(id, arr) {
   arr[id].completed = false;
-  paintList()
+  localStorage.setItem('taskArray', JSON.stringify(arr));
 }

@@ -2,10 +2,7 @@ import './style.css';
 import Icon from './loading.png';
 import Icon2 from './verticaldots.png';
 import TrashIcon from './trashcan.png';
-import {
-  checked,
-  unchecked,
-} from './complete';
+import changed from './complete';
 import {
   removeAll,
   addTask,
@@ -14,13 +11,13 @@ import {
 } from './addremove';
 
 const mainList = document.getElementById('main-list');
-const loadingIcon = new Image();
-loadingIcon.src = Icon;
 let taskArray = JSON.parse(localStorage.getItem('taskArray') || '[]');
 const forceChange = new Event('change', { bubbles: true });
 
 function paintList() {
   mainList.innerHTML = '';
+  const loadingIcon = new Image();
+  loadingIcon.src = Icon;
   const titleContainer = document.createElement('div');
   const paragraph = document.createElement('p');
   titleContainer.classList.add('title-container');
@@ -73,11 +70,7 @@ function buttonListener() {
   const checkboxes = document.querySelectorAll('.list-box');
   Array.from(checkboxes).forEach(box => {
     box.addEventListener('change', (event) => {
-      if (event.target.checked) {
-        checked(event.target.id, taskArray);
-      } else {
-        unchecked(event.target.id, taskArray);
-      }
+      changed(event.target.id, taskArray);
     });
   });
 }
@@ -112,14 +105,18 @@ function descriptionListener() {
       inputField.focus();
       const imageChange = document.querySelector(`img[value="${value}"]`);
       const initialImage = imageChange.src;
-      imageChange.addEventListener('click', e => {
-        removeItem(e, taskArray);
-        mainList.dispatchEvent(forceChange);
-      });
       imageChange.src = TrashIcon;
+      const removeListener = (event) => {
+        removeItem(event, taskArray);
+        mainList.dispatchEvent(forceChange);
+      };
+      imageChange.addEventListener('click', removeListener);
       inputField.addEventListener('focusout', (e) => {
-        e.target.outerHTML = initialState;
-        imageChange.src = initialImage;
+        setTimeout(() => {
+          imageChange.removeEventListener('click', removeListener);
+          e.target.outerHTML = initialState;
+          imageChange.src = initialImage;
+        }, 20);
       });
       inputField.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
@@ -138,13 +135,15 @@ function removeAllListener() {
   });
 }
 
-document.addEventListener('DOMContentLoaded', paintList());
-document.addEventListener('DOMContentLoaded', buttonListener);
-document.addEventListener('DOMContentLoaded', itemListener());
-document.addEventListener('DOMContentLoaded', descriptionListener());
-document.addEventListener('DOMContentLoaded', removeAllListener());
-mainList.addEventListener('change', paintList);
+document.addEventListener('DOMContentLoaded', () => {
+  paintList();
+  buttonListener();
+  itemListener();
+  descriptionListener();
+  removeAllListener();
+});
 mainList.addEventListener('change', () => {
+  paintList();
   buttonListener();
   itemListener();
   descriptionListener();

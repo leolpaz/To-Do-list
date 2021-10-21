@@ -17,7 +17,7 @@ On this milestone I added the option to add, remove, and update entries.
 
 ## Live Demo
 
-[Live Demo Link](https://rawcdn.githack.com/leolpaz/To-Do-list/b89846e8bf1493d7b1f1d0eb35dc6a4e148c5202/dist/index.html)
+[Live Demo Link](https://leolpaz.github.io/To-Do-list/)
 
 ## Get Started
 

@@ -33,29 +33,16 @@ function paintList() {
   taskArray.forEach((element, index) => {
     const verticalDotsIcon = new Image();
     verticalDotsIcon.setAttribute('value', index);
+    verticalDotsIcon.classList.add('cursor-grab')
     verticalDotsIcon.src = Icon2;
     const listItem = document.createElement('li');
+    listItem.draggable = false
     listItem.classList.add('list-item');
-    const label = document.createElement('label');
-    label.setAttribute('for', `element${index}`);
-    label.classList.add('list-label');
-    const inputCheckbox = document.createElement('input');
-    inputCheckbox.setAttribute('id', `${index}`);
-    inputCheckbox.setAttribute('value', `${element.completed}`);
-    inputCheckbox.setAttribute('type', 'checkbox');
-    inputCheckbox.classList.add('list-box');
-    const inputText = document.createElement('div');
-    inputText.classList.add('description');
-    inputText.setAttribute('value', `${index}`);
-    inputText.innerHTML = `${element.description}`;
+    listItem.innerHTML = `<input id="${index}" value="${element.completed}" type="checkbox" class="list-box"><p class="description" value="${index}">${element.description}</p>`
     if (element.completed === true) {
-      inputCheckbox.setAttribute('checked', 'checked');
-      inputText.style.textDecoration = 'line-through';
-      inputText.style.color = '#ccc';
+      listItem.innerHTML = `<input id="${index}" value="${element.completed}" checked="checked"" type="checkbox" class="list-box">
+      <p class="description" style="text-decoration:line-through;color:#ccc" value="${index}">${element.description}</p>`
     }
-    label.appendChild(inputCheckbox);
-    label.appendChild(inputText);
-    listItem.appendChild(label);
     listItem.appendChild(verticalDotsIcon);
     mainList.appendChild(listItem);
   });
@@ -106,6 +93,7 @@ function descriptionListener() {
       const imageChange = document.querySelector(`img[value="${value}"]`);
       const initialImage = imageChange.src;
       imageChange.src = TrashIcon;
+      imageChange.classList.remove('cursor-grab')
       const removeListener = (event) => {
         removeItem(event, taskArray);
         mainList.dispatchEvent(forceChange);
@@ -116,7 +104,8 @@ function descriptionListener() {
           imageChange.removeEventListener('click', removeListener);
           e.target.outerHTML = initialState;
           imageChange.src = initialImage;
-        }, 20);
+          imageChange.classList.add('cursor-grab')
+        }, 100);
       });
       inputField.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
@@ -135,12 +124,36 @@ function removeAllListener() {
   });
 }
 
+function dragItems() {
+  const dragIcons = document.querySelectorAll('.list-item img')
+  const dragItems = document.querySelectorAll('.list-item')
+
+  // dragItems.forEach(item => {
+  //   item.setAttribute('draggable', 'true');
+  // })
+
+  dragItems.forEach(item => {
+    item.addEventListener('dragstart', (event) => {
+    })
+    item.addEventListener('mousemove', (event) => {
+      const element = event.target.parentNode
+      element.style.position = 'absolute';
+      element.style.top = `${event.clientY}px`;
+      element.style.left = `${event.clientX}px`;
+      element.style.width = `${413}px`
+      console.log(event)
+    })
+  })
+}
+
+
 document.addEventListener('DOMContentLoaded', () => {
   paintList();
   buttonListener();
   itemListener();
   descriptionListener();
   removeAllListener();
+  dragItems()
 });
 mainList.addEventListener('change', () => {
   paintList();

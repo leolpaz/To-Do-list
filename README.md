@@ -2,11 +2,9 @@
 
 # To-Do-List
 
-> On this project we recreate using Webpack a to-do list with multiple functionalities as add and remove, refresh, clear completed and rearranging.
+> On this project we recreate using Webpack a to-do list with multiple functionalities as add and remove, refresh, clear completed and rearranging with drag and drop.
 
 ![screenshot](./app_screenshot.png)
-
-On this milestone I added the option to add, remove, and update entries.
 
 ## Built With
 

@@ -89,9 +89,9 @@ function descriptionListener() {
   const descriptions = document.querySelectorAll('.description');
   Array.from(descriptions).forEach((desc) => {
     desc.addEventListener('click', event => {
-      const checkIfOpened = event.target.parentNode.getAttribute('value');
+      const checkIfOpened = event.target.id;
       const value = event.target.getAttribute('value');
-      if (checkIfOpened === taskArray[value].description) {
+      if (checkIfOpened !== '') {
         return;
       }
       const initialState = event.target.innerHTML;
@@ -113,7 +113,7 @@ function descriptionListener() {
           e.target.outerHTML = initialState;
           imageChange.src = initialImage;
           imageChange.classList.add('cursor-grab');
-        }, 100);
+        }, 600);
       });
       inputField.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {

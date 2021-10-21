@@ -9,6 +9,12 @@ import {
   removeItem,
   edit,
 } from './addremove';
+import {
+  dragDrop,
+  dragLeave,
+  dragOver,
+  dragStart,
+} from './drag';
 
 const mainList = document.getElementById('main-list');
 let taskArray = JSON.parse(localStorage.getItem('taskArray') || '[]');
@@ -33,15 +39,17 @@ function paintList() {
   taskArray.forEach((element, index) => {
     const verticalDotsIcon = new Image();
     verticalDotsIcon.setAttribute('value', index);
-    verticalDotsIcon.classList.add('cursor-grab')
+    verticalDotsIcon.setAttribute('draggable', false);
+    verticalDotsIcon.classList.add('cursor-grab');
     verticalDotsIcon.src = Icon2;
     const listItem = document.createElement('li');
-    listItem.draggable = false
+    listItem.draggable = true;
     listItem.classList.add('list-item');
-    listItem.innerHTML = `<input id="${index}" value="${element.completed}" type="checkbox" class="list-box"><p class="description" value="${index}">${element.description}</p>`
+    listItem.value = index;
+    listItem.innerHTML = `<input id="${index}" value="${element.completed}" type="checkbox" class="list-box"><p class="description" value="${index}">${element.description}</p>`;
     if (element.completed === true) {
       listItem.innerHTML = `<input id="${index}" value="${element.completed}" checked="checked"" type="checkbox" class="list-box">
-      <p class="description" style="text-decoration:line-through;color:#ccc" value="${index}">${element.description}</p>`
+      <p class="description" style="text-decoration:line-through;color:#ccc" value="${index}">${element.description}</p>`;
     }
     listItem.appendChild(verticalDotsIcon);
     mainList.appendChild(listItem);
@@ -82,10 +90,10 @@ function descriptionListener() {
   Array.from(descriptions).forEach((desc) => {
     desc.addEventListener('click', event => {
       const checkIfOpened = event.target.parentNode.getAttribute('value');
-      if (checkIfOpened !== null) {
+      const value = event.target.getAttribute('value');
+      if (checkIfOpened === taskArray[value].description) {
         return;
       }
-      const value = event.target.getAttribute('value');
       const initialState = event.target.innerHTML;
       event.target.innerHTML = `<input class="description" id="input${value}" value="${taskArray[value].description}"></input>`;
       const inputField = document.getElementById(`input${value}`);
@@ -93,7 +101,7 @@ function descriptionListener() {
       const imageChange = document.querySelector(`img[value="${value}"]`);
       const initialImage = imageChange.src;
       imageChange.src = TrashIcon;
-      imageChange.classList.remove('cursor-grab')
+      imageChange.classList.remove('cursor-grab');
       const removeListener = (event) => {
         removeItem(event, taskArray);
         mainList.dispatchEvent(forceChange);
@@ -104,7 +112,7 @@ function descriptionListener() {
           imageChange.removeEventListener('click', removeListener);
           e.target.outerHTML = initialState;
           imageChange.src = initialImage;
-          imageChange.classList.add('cursor-grab')
+          imageChange.classList.add('cursor-grab');
         }, 100);
       });
       inputField.addEventListener('keydown', (e) => {
@@ -124,41 +132,30 @@ function removeAllListener() {
   });
 }
 
-function dragItems() {
-  const dragIcons = document.querySelectorAll('.list-item img')
-  const dragItems = document.querySelectorAll('.list-item')
-
-  // dragItems.forEach(item => {
-  //   item.setAttribute('draggable', 'true');
-  // })
-
-  dragItems.forEach(item => {
-    item.addEventListener('dragstart', (event) => {
-    })
-    item.addEventListener('mousemove', (event) => {
-      const element = event.target.parentNode
-      element.style.position = 'absolute';
-      element.style.top = `${event.clientY}px`;
-      element.style.left = `${event.clientX}px`;
-      element.style.width = `${413}px`
-      console.log(event)
-    })
-  })
+function dragListener() {
+  const draggables = document.querySelectorAll('li');
+  draggables.forEach(item => {
+    item.addEventListener('dragstart', dragStart);
+    item.addEventListener('dragover', dragOver);
+    item.addEventListener('drop', dragDrop);
+    item.addEventListener('dragleave', dragLeave);
+  });
 }
-
 
 document.addEventListener('DOMContentLoaded', () => {
   paintList();
+  dragListener();
   buttonListener();
   itemListener();
   descriptionListener();
   removeAllListener();
-  dragItems()
 });
 mainList.addEventListener('change', () => {
+  taskArray = JSON.parse(localStorage.getItem('taskArray') || '[]');
   paintList();
   buttonListener();
-  itemListener();
-  descriptionListener();
   removeAllListener();
+  dragListener();
+  descriptionListener();
+  itemListener();
 });

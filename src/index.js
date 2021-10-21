@@ -2,25 +2,28 @@ import './style.css';
 import Icon from './loading.png';
 import Icon2 from './verticaldots.png';
 import TrashIcon from './trashcan.png';
-import {
-  checked,
-  unchecked,
-} from './complete';
+import changed from './complete';
 import {
   removeAll,
   addTask,
   removeItem,
   edit,
 } from './addremove';
+import {
+  dragDrop,
+  dragLeave,
+  dragOver,
+  dragStart,
+} from './drag';
 
 const mainList = document.getElementById('main-list');
-const loadingIcon = new Image();
-loadingIcon.src = Icon;
 let taskArray = JSON.parse(localStorage.getItem('taskArray') || '[]');
 const forceChange = new Event('change', { bubbles: true });
 
 function paintList() {
   mainList.innerHTML = '';
+  const loadingIcon = new Image();
+  loadingIcon.src = Icon;
   const titleContainer = document.createElement('div');
   const paragraph = document.createElement('p');
   titleContainer.classList.add('title-container');
@@ -36,29 +39,18 @@ function paintList() {
   taskArray.forEach((element, index) => {
     const verticalDotsIcon = new Image();
     verticalDotsIcon.setAttribute('value', index);
+    verticalDotsIcon.setAttribute('draggable', false);
+    verticalDotsIcon.classList.add('cursor-grab');
     verticalDotsIcon.src = Icon2;
     const listItem = document.createElement('li');
+    listItem.draggable = true;
     listItem.classList.add('list-item');
-    const label = document.createElement('label');
-    label.setAttribute('for', `element${index}`);
-    label.classList.add('list-label');
-    const inputCheckbox = document.createElement('input');
-    inputCheckbox.setAttribute('id', `${index}`);
-    inputCheckbox.setAttribute('value', `${element.completed}`);
-    inputCheckbox.setAttribute('type', 'checkbox');
-    inputCheckbox.classList.add('list-box');
-    const inputText = document.createElement('div');
-    inputText.classList.add('description');
-    inputText.setAttribute('value', `${index}`);
-    inputText.innerHTML = `${element.description}`;
+    listItem.value = index;
+    listItem.innerHTML = `<input id="${index}" value="${element.completed}" type="checkbox" class="list-box"><p class="description" value="${index}">${element.description}</p>`;
     if (element.completed === true) {
-      inputCheckbox.setAttribute('checked', 'checked');
-      inputText.style.textDecoration = 'line-through';
-      inputText.style.color = '#ccc';
+      listItem.innerHTML = `<input id="${index}" value="${element.completed}" checked="checked"" type="checkbox" class="list-box">
+      <p class="description" style="text-decoration:line-through;color:#ccc" value="${index}">${element.description}</p>`;
     }
-    label.appendChild(inputCheckbox);
-    label.appendChild(inputText);
-    listItem.appendChild(label);
     listItem.appendChild(verticalDotsIcon);
     mainList.appendChild(listItem);
   });
@@ -73,11 +65,7 @@ function buttonListener() {
   const checkboxes = document.querySelectorAll('.list-box');
   Array.from(checkboxes).forEach(box => {
     box.addEventListener('change', (event) => {
-      if (event.target.checked) {
-        checked(event.target.id, taskArray);
-      } else {
-        unchecked(event.target.id, taskArray);
-      }
+      changed(event.target.id, taskArray);
     });
   });
 }
@@ -102,24 +90,30 @@ function descriptionListener() {
   Array.from(descriptions).forEach((desc) => {
     desc.addEventListener('click', event => {
       const checkIfOpened = event.target.parentNode.getAttribute('value');
-      if (checkIfOpened !== null) {
+      const value = event.target.getAttribute('value');
+      if (checkIfOpened === taskArray[value].description) {
         return;
       }
-      const value = event.target.getAttribute('value');
       const initialState = event.target.innerHTML;
       event.target.innerHTML = `<input class="description" id="input${value}" value="${taskArray[value].description}"></input>`;
       const inputField = document.getElementById(`input${value}`);
       inputField.focus();
       const imageChange = document.querySelector(`img[value="${value}"]`);
       const initialImage = imageChange.src;
-      imageChange.addEventListener('click', e => {
-        removeItem(e, taskArray);
-        mainList.dispatchEvent(forceChange);
-      });
       imageChange.src = TrashIcon;
+      imageChange.classList.remove('cursor-grab');
+      const removeListener = (event) => {
+        removeItem(event, taskArray);
+        mainList.dispatchEvent(forceChange);
+      };
+      imageChange.addEventListener('click', removeListener);
       inputField.addEventListener('focusout', (e) => {
-        e.target.outerHTML = initialState;
-        imageChange.src = initialImage;
+        setTimeout(() => {
+          imageChange.removeEventListener('click', removeListener);
+          e.target.outerHTML = initialState;
+          imageChange.src = initialImage;
+          imageChange.classList.add('cursor-grab');
+        }, 100);
       });
       inputField.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
@@ -138,15 +132,30 @@ function removeAllListener() {
   });
 }
 
-document.addEventListener('DOMContentLoaded', paintList());
-document.addEventListener('DOMContentLoaded', buttonListener);
-document.addEventListener('DOMContentLoaded', itemListener());
-document.addEventListener('DOMContentLoaded', descriptionListener());
-document.addEventListener('DOMContentLoaded', removeAllListener());
-mainList.addEventListener('change', paintList);
-mainList.addEventListener('change', () => {
+function dragListener() {
+  const draggables = document.querySelectorAll('li');
+  draggables.forEach(item => {
+    item.addEventListener('dragstart', dragStart);
+    item.addEventListener('dragover', dragOver);
+    item.addEventListener('drop', dragDrop);
+    item.addEventListener('dragleave', dragLeave);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  paintList();
+  dragListener();
   buttonListener();
   itemListener();
   descriptionListener();
   removeAllListener();
+});
+mainList.addEventListener('change', () => {
+  taskArray = JSON.parse(localStorage.getItem('taskArray') || '[]');
+  paintList();
+  buttonListener();
+  removeAllListener();
+  dragListener();
+  descriptionListener();
+  itemListener();
 });

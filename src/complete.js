@@ -1,9 +1,4 @@
-export function checked(id, arr) {
-  arr[id].completed = true;
-  localStorage.setItem('taskArray', JSON.stringify(arr));
-}
-
-export function unchecked(id, arr) {
-  arr[id].completed = false;
+export default function changed(id, arr) {
+  arr[id].completed = !arr[id].completed;
   localStorage.setItem('taskArray', JSON.stringify(arr));
 }

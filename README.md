@@ -15,7 +15,7 @@
 
 ## Live Demo
 
-[Live Demo Link](https://leolpaz.github.io/To-Do-list/)
+[Live Demo Link](https://leolpaz-todolist.netlify.app/)
 
 ## Get Started
 
